@@ -4,39 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gửi cậu...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pattaya&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    
     <style>
         body { background-color: #fdfcf0; display: flex; justify-content: center; padding: 20px; margin: 0; }
         .notebook {
             width: 90%; max-width: 500px; background-color: #fff;
             background-image: linear-gradient(#e1e1e1 1px, transparent 1px);
-            background-size: 100% 30px; line-height: 30px;
+            background-size: 100% 32px; line-height: 32px; /* Chỉnh dòng khớp với chữ */
             padding: 60px 20px 40px 60px; border-left: 2px solid #ffadad;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative;
-            font-family: 'cursive', sans-serif; font-size: 20px; color: #2d3436; min-height: 400px;
+            /* Font Pattaya giúp chữ tiếng Việt rõ ràng, dễ đọc hơn cursive mặc định */
+            font-family: 'Pattaya', sans-serif; 
+            font-size: 22px; color: #2d3436; min-height: 450px;
         }
         .notebook::before {
             content: ''; position: absolute; left: 50px; top: 0; bottom: 0; width: 1px; background: #ffadad;
         }
-        /* Hiệu ứng con trỏ nhấp nháy khi viết */
         .text { 
-            font-style: italic; 
+            font-style: normal; 
             white-space: pre-wrap; 
-            border-right: 2px solid rgba(230, 57, 70, 0.75);
+            border-right: 3px solid #e63946;
             animation: blink 0.7s step-end infinite;
         }
         @keyframes blink { from, to { border-color: transparent } 50% { border-color: #e63946; } }
         
-        .heart { color: #e63946; text-align: center; margin-top: 50px; font-size: 30px; opacity: 0; transition: opacity 1s; }
+        .heart { 
+            color: #e63946; text-align: center; margin-top: 30px; 
+            font-size: 40px; opacity: 0; transition: opacity 1.5s; 
+            font-family: Arial, sans-serif;
+        }
     </style>
 </head>
 <body>
     <div class="notebook">
         <div class="text" id="typing-text"></div>
-        <div class="heart" id="heart"></div>
+        <div class="heart" id="heart">❤</div>
     </div>
 
     <script>
-        const content = "Happy Birthday🥳🤯🍰🎂 Chúc bn tuổi mới.... Tôi có điều này muốn nói với bạn. Tht ra tôi thích bạn lâu r nhm ngại chx dám nói, hnay tôi ms đủ can đảm để nói ra, tôi thích bạn, bạn lm ngy tôi nha";
+        // Nội dung của bạn
+        const content = "Happy Birthday🥳🤯🍰🎂 Chúc bạn tuổi mới luôn vui vẻ và hạnh phúc. Tớ có điều này muốn nói với cậu...\n\nThật ra tớ thích cậu lâu rồi nhưng ngại chưa dám nói, hôm nay tớ mới đủ can đảm để nói ra: Tớ thích cậu!! Cậu làm người yêu tớ nha";
         const textElement = document.getElementById("typing-text");
         const heartElement = document.getElementById("heart");
         let index = 0;
@@ -45,16 +53,14 @@
             if (index < content.length) {
                 textElement.innerHTML += content.charAt(index);
                 index++;
-                // Tốc độ viết (ms), 100ms = 0.1 giây mỗi chữ
-                setTimeout(typeWriter, 100);
+                // Tốc độ viết: 80ms để mượt mà hơn
+                setTimeout(typeWriter, 80);
             } else {
-                // Hiện trái tim sau khi viết xong và ẩn con trỏ nháy
                 textElement.style.borderRight = "none";
                 heartElement.style.opacity = "1";
             }
         }
 
-        // Bắt đầu chạy hiệu ứng khi trang web load xong
         window.onload = typeWriter;
     </script>
 </body>
