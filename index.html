@@ -17,16 +17,45 @@
         .notebook::before {
             content: ''; position: absolute; left: 50px; top: 0; bottom: 0; width: 1px; background: #ffadad;
         }
-        .text { font-style: italic; white-space: pre-wrap; }
-        .heart { color: #e63946; text-align: center; margin-top: 50px; font-size: 30px; }
+        /* Hiệu ứng con trỏ nhấp nháy khi viết */
+        .text { 
+            font-style: italic; 
+            white-space: pre-wrap; 
+            border-right: 2px solid rgba(230, 57, 70, 0.75);
+            animation: blink 0.7s step-end infinite;
+        }
+        @keyframes blink { from, to { border-color: transparent } 50% { border-color: #e63946; } }
+        
+        .heart { color: #e63946; text-align: center; margin-top: 50px; font-size: 30px; opacity: 0; transition: opacity 1s; }
     </style>
 </head>
 <body>
     <div class="notebook">
-        <div class="text">Tớ thích cậu cũng lâu rồi nhưng mà chưa dám nói ra bây giờ mới đủ dũng khí để nói. 
-
-Cho tớ tìm hiểu và làm quen với cậu nhé.</div>
-        <div class="heart">❤</div>
+        <div class="text" id="typing-text"></div>
+        <div class="heart" id="heart"></div>
     </div>
+
+    <script>
+        const content = "Tớ thích cậu cũng lâu rồi nhưng mà chưa dám nói ra bây giờ mới đủ dũng khí để nói.\n\nCho tớ tìm hiểu và làm quen với cậu nhé.";
+        const textElement = document.getElementById("typing-text");
+        const heartElement = document.getElementById("heart");
+        let index = 0;
+
+        function typeWriter() {
+            if (index < content.length) {
+                textElement.innerHTML += content.charAt(index);
+                index++;
+                // Tốc độ viết (ms), 100ms = 0.1 giây mỗi chữ
+                setTimeout(typeWriter, 100);
+            } else {
+                // Hiện trái tim sau khi viết xong và ẩn con trỏ nháy
+                textElement.style.borderRight = "none";
+                heartElement.style.opacity = "1";
+            }
+        }
+
+        // Bắt đầu chạy hiệu ứng khi trang web load xong
+        window.onload = typeWriter;
+    </script>
 </body>
 </html>
