@@ -4,71 +4,159 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gửi cậu...</title>
-    <link href="https://fonts.googleapis.com/css2?family=Pattaya&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pattaya&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        body { background-color: #fdfcf0; display: flex; justify-content: center; padding: 20px; margin: 0; overflow-x: hidden; }
+        body { 
+            background-color: #fff9f0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            min-height: 100vh;
+            margin: 0; 
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Trang trí hoa lá ở 4 góc - Giảm 10px (80px -> 70px) */
+        .decoration {
+            position: fixed;
+            font-size: 70px; 
+            z-index: 5;
+            pointer-events: none;
+            filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.15));
+        }
+        .top-left { top: -10px; left: -10px; transform: rotate(-10deg); }
+        .top-right { top: -10px; right: -10px; transform: rotate(10deg); }
+        .bottom-left { bottom: -10px; left: -10px; }
+        .bottom-right { bottom: -10px; right: -10px; }
+
+        /* Mèo Chibi - Giảm 10px (70px -> 60px) */
+        .chibi-cat {
+            position: fixed;
+            font-size: 60px;
+            z-index: 10;
+            pointer-events: none;
+            filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.1));
+        }
+        .cat-left { bottom: 30px; left: 10%; animation: wobble 3s infinite; }
+        .cat-right { bottom: 30px; right: 10%; animation: wobble 3s infinite 1.5s; }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(-5deg) translateY(0); }
+            50% { transform: rotate(5deg) translateY(-15px); }
+        }
+
+        /* Hiệu ứng cánh hoa bay rực rỡ */
+        .leaf {
+            position: fixed;
+            top: -10%;
+            z-index: 2;
+            animation: fall 8s linear infinite;
+        }
+
+        @keyframes fall {
+            0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 1; }
+            100% { top: 110%; transform: translateX(150px) rotate(720deg); opacity: 0.3; }
+        }
+
+        /* Khung vở ô li */
         .notebook {
-            width: 90%; max-width: 500px; background-color: #fff;
-            background-image: linear-gradient(#e1e1e1 1px, transparent 1px);
-            background-size: 100% 32px; line-height: 32px;
-            padding: 60px 20px 40px 60px; border-left: 2px solid #ffadad;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative;
+            width: 85%; 
+            max-width: 450px; 
+            background-color: #fff;
+            background-image: 
+                linear-gradient(to right, rgba(173, 216, 230, 0.4) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(173, 216, 230, 0.4) 1px, transparent 1px);
+            background-size: 28px 28px;
+            line-height: 28px;
+            padding: 60px 25px 40px 65px; 
+            border: 2px solid #eee;
+            border-left: 4px solid #ffadad; 
+            box-shadow: 0 15px 45px rgba(0,0,0,0.15); 
+            position: relative;
             font-family: 'Pattaya', sans-serif; 
-            font-size: 22px; color: #2d3436; min-height: 450px;
-            z-index: 1;
+            font-size: 20px; /* Chỉnh lại font chữ cho cân đối */
+            color: #2d3436; 
+            min-height: 400px;
+            z-index: 3;
+            border-radius: 10px;
         }
+
         .notebook::before {
-            content: ''; position: absolute; left: 50px; top: 0; bottom: 0; width: 1px; background: #ffadad;
+            content: ''; position: absolute; left: 55px; top: 0; bottom: 0; width: 2px; background: #ffadad;
         }
+
         .text { 
-            font-style: normal; 
             white-space: pre-wrap; 
             border-right: 3px solid #e63946;
             animation: blink 0.7s step-end infinite;
         }
+
         @keyframes blink { from, to { border-color: transparent } 50% { border-color: #e63946; } }
         
         .heart { 
-            color: #e63946; text-align: center; margin-top: 30px; 
-            font-size: 40px; opacity: 0; transition: opacity 1.5s; 
+            color: #e63946; text-align: center; margin-top: 25px; 
+            font-size: 50px; opacity: 0; transition: opacity 1.5s; 
+            filter: drop-shadow(0 0 10px rgba(230, 57, 70, 0.5));
         }
     </style>
 </head>
 <body>
+    <!-- Hoa lá giảm kích thước -->
+    <div class="decoration top-left">🌸🍃</div>
+    <div class="decoration top-right">🌺🌿</div>
+    <div class="decoration bottom-left">🌻🌼</div>
+    <div class="decoration bottom-right">🌹✨</div>
+
+    <!-- Mèo Chibi giảm kích thước -->
+    <div class="chibi-cat cat-left">🐱</div>
+    <div class="chibi-cat cat-right">😸</div>
+
     <div class="notebook">
         <div class="text" id="typing-text"></div>
-        <div class="heart" id="heart">❤</div>
+        <div class="heart" id="heart">❤️</div>
     </div>
 
     <script>
-        const content = "Happy Birthday🥳🤯🍰🎂 Chúc bạn tuổi mới luôn vui vẻ và hạnh phúc. Tớ có điều này muốn nói với cậu...\n\nThật ra tớ thích cậu lâu rồi nhưng ngại chưa dám nói, hôm nay tớ mới đủ can đảm để nói ra Tớ thích cậu  Cậu làm người yêu tớ nha";
+        const content = "Happy Birthday🥳🤯🍰🎂\n\nChúc bạn tuổi mới luôn vui vẻ và hạnh phúc. Tớ có điều này muốn nói với cậu...\n\nThật ra tớ thích cậu lâu rồi nhưng ngại chưa dám nói, hôm nay tớ mới đủ can đảm để nói ra: Tớ thích cậu! Cậu làm người yêu tớ nha? ❤️";
         const textElement = document.getElementById("typing-text");
         const heartElement = document.getElementById("heart");
         let index = 0;
 
-        // Hàm bắn pháo hoa từ 2 góc
+        function createParticles() {
+            const symbols = ['🌸', '✨', '💖', '🍀', '🦋'];
+            for (let i = 0; i < 20; i++) {
+                let p = document.createElement('div');
+                p.className = 'leaf';
+                p.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                p.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                p.style.opacity = Math.random();
+                document.body.appendChild(p);
+            }
+        }
+
         function fireConfetti() {
-            var duration = 3 * 1000;
-            var end = Date.now() + duration;
+            const end = Date.now() + 5000;
+            const colors = ['#ff69b4', '#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bfbc0', '#a0c4ff', '#bdb2ff', '#ffc6ff'];
 
             (function frame() {
-                // Bắn từ bên trái
                 confetti({
-                    particleCount: 3,
+                    particleCount: 4,
                     angle: 60,
-                    spread: 55,
-                    origin: { x: 0, y: 0.8 },
-                    colors: ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bfbc0', '#a0c4ff', '#bdb2ff', '#ffc6ff']
+                    spread: 60,
+                    origin: { x: 0, y: 0.7 },
+                    colors: colors
                 });
-                // Bắn từ bên phải
                 confetti({
-                    particleCount: 3,
+                    particleCount: 4,
                     angle: 120,
-                    spread: 55,
-                    origin: { x: 1, y: 0.8 },
-                    colors: ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bfbc0', '#a0c4ff', '#bdb2ff', '#ffc6ff']
+                    spread: 60,
+                    origin: { x: 1, y: 0.7 },
+                    colors: colors
                 });
 
                 if (Date.now() < end) {
@@ -81,16 +169,18 @@
             if (index < content.length) {
                 textElement.innerHTML += content.charAt(index);
                 index++;
-                setTimeout(typeWriter, 80);
+                setTimeout(typeWriter, 85);
             } else {
                 textElement.style.borderRight = "none";
                 heartElement.style.opacity = "1";
-                // Khi viết xong thì bắn pháo hoa
                 fireConfetti();
             }
         }
 
-        window.onload = typeWriter;
+        window.onload = () => {
+            typeWriter();
+            createParticles();
+        };
     </script>
 </body>
 </html>
