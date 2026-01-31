@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gửi cậu...</title>
     <link href="https://fonts.googleapis.com/css2?family=Pattaya&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        body { background-color: #fdfcf0; display: flex; justify-content: center; padding: 20px; margin: 0; }
+        body { background-color: #fdfcf0; display: flex; justify-content: center; padding: 20px; margin: 0; overflow-x: hidden; }
         .notebook {
             width: 90%; max-width: 500px; background-color: #fff;
             background-image: linear-gradient(#e1e1e1 1px, transparent 1px);
-            background-size: 100% 32px; line-height: 32px; /* Chỉnh dòng khớp với chữ */
+            background-size: 100% 32px; line-height: 32px;
             padding: 60px 20px 40px 60px; border-left: 2px solid #ffadad;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative;
-            /* Font Pattaya giúp chữ tiếng Việt rõ ràng, dễ đọc hơn cursive mặc định */
             font-family: 'Pattaya', sans-serif; 
             font-size: 22px; color: #2d3436; min-height: 450px;
+            z-index: 1;
         }
         .notebook::before {
             content: ''; position: absolute; left: 50px; top: 0; bottom: 0; width: 1px; background: #ffadad;
@@ -32,32 +33,60 @@
         .heart { 
             color: #e63946; text-align: center; margin-top: 30px; 
             font-size: 40px; opacity: 0; transition: opacity 1.5s; 
-            font-family: Arial, sans-serif;
         }
     </style>
 </head>
 <body>
     <div class="notebook">
         <div class="text" id="typing-text"></div>
-        <div class="heart" id="heart">❤</div>
+        <div class="heart" id="heart"></div>
     </div>
 
     <script>
-        // Nội dung của bạn
-        const content = "Happy Birthday🥳🤯🍰🎂 Chúc bạn tuổi mới luôn vui vẻ và hạnh phúc. Tớ có điều này muốn nói với cậu...\n\nThật ra tớ thích cậu lâu rồi nhưng ngại chưa dám nói, hôm nay tớ mới đủ can đảm để nói ra: Tớ thích cậu!! Cậu làm người yêu tớ nha";
+        const content = "Happy Birthday🐧🐧 Chúc bạn tuổi mới luôn vui vẻ và hạnh phúc. Tớ có điều này muốn nói với cậu...\n\nThật ra tớ thích cậu lâu rồi nhưng ngại chưa dám nói, hôm nay tớ mới đủ can đảm để nói ra: Tớ thích cậu! Cậu làm người yêu tớ nha? ";
         const textElement = document.getElementById("typing-text");
         const heartElement = document.getElementById("heart");
         let index = 0;
+
+        // Hàm bắn pháo hoa từ 2 góc
+        function fireConfetti() {
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                // Bắn từ bên trái
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0, y: 0.8 },
+                    colors: ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bfbc0', '#a0c4ff', '#bdb2ff', '#ffc6ff']
+                });
+                // Bắn từ bên phải
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1, y: 0.8 },
+                    colors: ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bfbc0', '#a0c4ff', '#bdb2ff', '#ffc6ff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
 
         function typeWriter() {
             if (index < content.length) {
                 textElement.innerHTML += content.charAt(index);
                 index++;
-                // Tốc độ viết: 80ms để mượt mà hơn
                 setTimeout(typeWriter, 80);
             } else {
                 textElement.style.borderRight = "none";
                 heartElement.style.opacity = "1";
+                // Khi viết xong thì bắn pháo hoa
+                fireConfetti();
             }
         }
 
